@@ -126,7 +126,9 @@
         document.getElementById("balance").textContent = balance.toLocaleString();
         document.getElementById("transactions").textContent = transactions;
         const txId = "0xe1818839bb1c12600fb6cccfd2962d836213d4d08e7aa2fefdcb8d6dcb16ca39";
-        result.innerHTML = `✅ Transaction successful!<br>Confirmation ID:<br><code>${txId}</code>`;
+        result.innerHTML = `✅ Transaction successful!<br>Confirmation ID:<br><code>${txId}</code> <br>
+        Track your transaction at https://etherscan.io/
+        `;
         document.querySelector(".btn-primary").disabled = false;
       }, 5000);
     }
