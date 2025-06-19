@@ -102,43 +102,73 @@
   </div>
 
   <script>
-    let balance = 300000;
-    let transactions = 0;
+  let balance = 300000;
+  let transactions = 0;
 
-    function createTransaction() {
-      const wallet = document.getElementById("wallet").value.trim();
-      const amount = parseFloat(document.getElementById("amount").value);
-      const stay = parseInt(document.getElementById("stay").value);
-      const result = document.getElementById("result");
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
-      if (!wallet || isNaN(amount) || isNaN(stay) || amount <= 0 || amount > balance) {
-        alert("Invalid input or insufficient balance.");
-        return;
-      }
+  async function createTransaction() {
+    const wallet = document.getElementById("wallet").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const stay = parseInt(document.getElementById("stay").value);
+    const result = document.getElementById("result");
+    const btn = document.querySelector(".btn-primary");
 
-      document.querySelector(".btn-primary").disabled = true;
-      result.textContent = "Processing... 🔄 Please wait.. ✅";
-
-      setTimeout(() => {
-        balance -= amount;
-        transactions++;
-
-        document.getElementById("balance").textContent = balance.toLocaleString();
-        document.getElementById("transactions").textContent = transactions;
-        const txId = "0xe1818839bb1c12600fb6cccfd2962d836213d4d08e7aa2fefdcb8d6dcb16ca39";
-        result.innerHTML = `✅ Transaction successful!<br>Confirmation ID:<br><code>${txId}</code> <br>
-        Track your transaction at https://etherscan.io/
-        `;
-        document.querySelector(".btn-primary").disabled = false;
-      }, 5000);
+    if (!wallet || isNaN(amount) || isNaN(stay) || amount <= 0 || amount > balance) {
+      alert("Invalid input or insufficient balance.");
+      return;
     }
 
-    function cancelTransaction() {
-      document.getElementById("wallet").value = "";
-      document.getElementById("amount").value = "";
-      document.getElementById("stay").value = "";
-      document.getElementById("result").textContent = "Transaction cancelled.";
+    btn.disabled = true;
+    result.innerHTML = `<span class="step">Initializing transaction…</span>`;
+
+    // Step 1: Broadcast to network
+    await sleep(1000);
+    result.innerHTML = `<span class="step">Broadcasting to network… 🔄</span>`;
+
+    // Step 2: Enter mempool
+    await sleep(1500);
+    result.innerHTML = `<span class="step">In mempool, waiting for miner… ⏳</span>`;
+
+    // Step 3: Mined in a block
+    await sleep(2000);
+    const fakeBlock = Math.floor(1800000 + Math.random() * 5000);
+    result.innerHTML = `<span class="step">Mined in block <strong>#${fakeBlock}</strong> ✅</span>`;
+
+    // Step 4: Confirmations (animate count)
+    let conf = 0, targetConf = 3;
+    while (conf < targetConf) {
+      await sleep(800);
+      conf++;
+      result.innerHTML = `<span class="step">Confirmations: <strong>${conf}/${targetConf}</strong> ✔️</span>`;
     }
-  </script>
+
+    // Finalize
+    balance -= amount;
+    transactions++;
+    document.getElementById("balance").textContent = balance.toLocaleString();
+    document.getElementById("transactions").textContent = transactions;
+
+    const txId = "0xe1818839bb1c12600fb6cccfd2962d836213d4d08e7aa2fefdcb8d6dcb16ca39";
+    result.innerHTML = `
+      ✅ Transaction successful!<br>
+      Confirmation ID:<br>
+      <code>${txId}</code><br>
+      Track at <a href="https://etherscan.io/tx/${txId}" target="_blank">Etherscan</a>
+    `;
+    btn.disabled = false;
+  }
+
+  function cancelTransaction() {
+    document.getElementById("wallet").value = "";
+    document.getElementById("amount").value = "";
+    document.getElementById("stay").value = "";
+    const result = document.getElementById("result");
+    result.textContent = "Transaction cancelled.";
+  }
+</script>
+
 </body>
 </html>
