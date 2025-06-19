@@ -125,22 +125,22 @@
     result.innerHTML = `<span class="step">Initializing transaction…</span>`;
 
     // Step 1: Broadcast to network
-    await sleep(1000);
+    await sleep(8000);
     result.innerHTML = `<span class="step">Broadcasting to network… 🔄</span>`;
 
     // Step 2: Enter mempool
-    await sleep(1500);
+    await sleep(8500);
     result.innerHTML = `<span class="step">In mempool, waiting for miner… ⏳</span>`;
 
     // Step 3: Mined in a block
-    await sleep(2000);
+    await sleep(8000);
     const fakeBlock = Math.floor(1800000 + Math.random() * 5000);
     result.innerHTML = `<span class="step">Mined in block <strong>#${fakeBlock}</strong> ✅</span>`;
 
     // Step 4: Confirmations (animate count)
     let conf = 0, targetConf = 3;
     while (conf < targetConf) {
-      await sleep(800);
+      await sleep(8000);
       conf++;
       result.innerHTML = `<span class="step">Confirmations: <strong>${conf}/${targetConf}</strong> ✔️</span>`;
     }
@@ -156,7 +156,7 @@
       ✅ Transaction successful!<br>
       Confirmation ID:<br>
       <code>${txId}</code><br>
-      Track at <a href="https://etherscan.io/tx/${txId}" target="_blank">Etherscan</a>
+      Track at - <a href="https://etherscan.io/tx/${txId}" target="_blank">etherscan.io</a>
     `;
     btn.disabled = false;
   }
